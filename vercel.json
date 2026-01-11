@@ -1,0 +1,16 @@
+{
+  "rewrites": [{ "source": "/(.*)", "destination": "/index.html" }]
+}
+これにより、どのURLにアクセスしてもReactのメインファイル（`index.html`）が読み込まれるようになり、404エラーが解消されます。
+
+### 2. GitHubにプッシュ
+作成した `vercel.json` をGitHubにプッシュします。
+```bash
+git add vercel.json
+git commit -m "add vercel.json to fix 404"
+git push origin main
+
+### 3. Vercelの「Build Settings」を確認
+Vercelのプロジェクト設定（Settings > General）で、**Build Command** が `npm run build`、**Output Directory** が `build` になっていることを確認してください（通常は自動設定されています）。
+
+これで、サイトにアクセスした際に正しくアプリが表示されるようになります。
