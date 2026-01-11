@@ -3,15 +3,15 @@ import { QrCode, MapPin, Award, Camera, RefreshCw, CheckCircle2, Anchor } from '
 
 // 野母崎・樺島スタンプスポットの定義
 const STAMP_CONFIG = [
-  { id: 'Spot1', name: '樺島灯台', location: '樺島町', imageDescription: '青空にそびえ立つ白い樺島灯台' },
-  { id: 'Spot2', name: '樺島灯台先展望所', location: '樺島町', imageDescription: '展望所から望む広大な東シナ海' },
-  { id: 'Spot3', name: 'オオウナギ井戸', location: '樺島町', imageDescription: '天然記念物オオウナギが住む井戸' },
-  { id: 'Spot4', name: 'ふれあい公園', location: '樺島町', imageDescription: '樺島漁港を望む開放的な公園' },
-  { id: 'Spot5', name: '熊野神社', location: '樺島町', imageDescription: '歴史ある神社の石鳥居' },
-  { id: 'Spot6', name: '無量寺', location: '樺島町', imageDescription: '静寂に包まれた無量寺の本堂' },
-  { id: 'Spot7', name: '鰮神社', location: '樺島町', imageDescription: '大漁を祈願する海辺の祠' },
-  { id: 'Spot8', name: 'お大師様', location: '樺島町', imageDescription: '地域を見守るお大師様の石像' },
-  { id: 'Spot9', name: 'えのきの祠', location: '樺島町', imageDescription: '巨木エノキの根元にある祠' },
+  { id: 'Spot1', name: '樺島灯台', location: '樺島町', imageDescription: '青空にそびえ立つ白い樺島灯台', img: 'images/spot1.jpg' },
+  { id: 'Spot2', name: '樺島灯台先展望所', location: '樺島町', imageDescription: '展望所から望む広大な東シナ海', img: 'images/spot2.jpg' },
+  { id: 'Spot3', name: 'オオウナギ井戸', location: '樺島町', imageDescription: '天然記念物オオウナギが住む井戸', img: 'images/spot3.jpg' },
+  { id: 'Spot4', name: 'ふれあい公園', location: '樺島町', imageDescription: '樺島漁港を望む開放的な公園', img: 'images/spot4.jpg' },
+  { id: 'Spot5', name: '熊野神社', location: '樺島町', imageDescription: '歴史ある神社の石鳥居', img: 'images/spot5.jpg' },
+  { id: 'Spot6', name: '無量寺', location: '樺島町', imageDescription: '静寂に包まれた無量寺の本堂', img: 'images/spot6.jpg' },
+  { id: 'Spot7', name: '鰮神社', location: '樺島町', imageDescription: '大漁を祈願する海辺の祠', img: 'images/spot7.jpg' },
+  { id: 'Spot8', name: 'お大師様', location: '樺島町', imageDescription: '地域を見守るお大師様の石像', img: 'images/spot8.jpg' },
+  { id: 'Spot9', name: 'えのきの祠', location: '樺島町', imageDescription: '巨木エノキの根元にある祠', img: 'images/spot9.jpg' }
 ];
 
 export default function App() {
@@ -135,6 +135,13 @@ export default function App() {
     }
   };
 
+  // 画像のパスを解決するヘルパー関数
+  const getImagePath = (path) => {
+    // publicフォルダ直下を指すように、環境変数があればそれを使い、なければ相対パスにする
+    const publicUrl = process.env.PUBLIC_URL || '';
+    return `${publicUrl}/${path}`;
+  };
+
   return (
     <div className="min-h-screen bg-sky-50 text-slate-800 font-sans pb-32 select-none">
       {/* Header */}
@@ -186,13 +193,24 @@ export default function App() {
 
         {/* Success Reveal */}
         {lastCollectedSpot && (
-          <div className="bg-white rounded-[2.5rem] p-6 shadow-2xl border-4 border-sky-400">
-            <div className="aspect-video bg-slate-100 rounded-2xl flex items-center justify-center mb-4 text-center p-4">
-               <div className="font-bold text-slate-500 text-sm">
-                 
+          <div className="bg-white rounded-[2.5rem] p-6 shadow-2xl border-4 border-sky-400 animate-in zoom-in-95">
+            <div className="aspect-video bg-slate-100 rounded-2xl overflow-hidden mb-4 relative flex items-center justify-center">
+               <img 
+                 src={getImagePath(lastCollectedSpot.img)} 
+                 alt={lastCollectedSpot.name}
+                 className="w-full h-full object-cover"
+                 onError={(e) => {
+                   e.target.style.display = 'none';
+                   e.target.nextSibling.style.display = 'flex';
+                 }}
+               />
+               <div className="hidden font-bold text-slate-400 text-xs p-4 text-center">
+                 画像が見つかりません<br/>
+                 <span className="text-[10px] font-normal opacity-70">public/{lastCollectedSpot.img} を確認してください</span>
                </div>
             </div>
-            <h3 className="text-xl font-black text-center mb-4">{lastCollectedSpot.name}</h3>
+            <h3 className="text-xl font-black text-center mb-1">{lastCollectedSpot.name}</h3>
+            <p className="text-center text-xs text-slate-400 mb-4">{lastCollectedSpot.location}</p>
             <button onClick={() => setLastCollectedSpot(null)} className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold">
               閉じる
             </button>
@@ -204,10 +222,10 @@ export default function App() {
           <div className="relative overflow-hidden rounded-[2.5rem] bg-slate-900 aspect-square shadow-xl flex items-center justify-center border-4 border-white">
             {!isScanning ? (
               <div className="text-center">
-                <div className="w-20 h-20 bg-sky-500 rounded-full flex items-center justify-center mx-auto mb-6">
+                <div className="w-20 h-20 bg-sky-500 rounded-full flex items-center justify-center mx-auto mb-6 shadow-lg shadow-sky-200">
                   <Camera className="text-white" size={36} />
                 </div>
-                <button onClick={startCamera} className="bg-white text-slate-900 px-8 py-3 rounded-2xl font-black">
+                <button onClick={startCamera} className="bg-white text-slate-900 px-8 py-3 rounded-2xl font-black shadow-md">
                   QRをスキャンする
                 </button>
               </div>
@@ -220,7 +238,7 @@ export default function App() {
                      <div className="absolute w-full h-0.5 bg-sky-400 top-0 animate-scan" />
                   </div>
                 </div>
-                <button onClick={stopCamera} className="absolute bottom-6 bg-red-500 text-white px-8 py-2 rounded-full font-bold">
+                <button onClick={stopCamera} className="absolute bottom-6 bg-red-500 text-white px-8 py-2 rounded-full font-bold shadow-lg">
                   キャンセル
                 </button>
               </>
@@ -233,19 +251,35 @@ export default function App() {
           {STAMP_CONFIG.map((spot) => {
             const isOwned = collectedStamps.includes(spot.id);
             return (
-              <div key={spot.id} className={`rounded-3xl border p-4 transition-all ${isOwned ? 'bg-white border-sky-400' : 'bg-white/40 border-slate-100 opacity-50'}`}>
-                <div className="aspect-square flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50">
+              <div key={spot.id} className={`rounded-3xl border transition-all overflow-hidden flex flex-col ${isOwned ? 'bg-white border-sky-400 shadow-md' : 'bg-white/40 border-slate-100 opacity-50'}`}>
+                <div className="aspect-square flex items-center justify-center relative bg-slate-100 overflow-hidden">
                   {isOwned ? (
-                    <div className="text-center p-2">
-                       <CheckCircle2 className="text-green-500 mx-auto mb-1" size={20} />
-                       <div className="text-[9px] font-bold text-slate-400 leading-tight">
-                         
-                       </div>
-                    </div>
+                    <>
+                      <img 
+                        src={getImagePath(spot.img)} 
+                        alt={spot.name}
+                        className="w-full h-full object-cover"
+                        onError={(e) => {
+                          e.target.style.display = 'none';
+                          e.target.nextSibling.style.display = 'flex';
+                        }}
+                      />
+                      <div className="hidden absolute inset-0 flex-col items-center justify-center p-2 text-center">
+                        <CheckCircle2 className="text-green-500 mb-1" size={20} />
+                        <div className="text-[8px] font-bold text-slate-400 leading-tight">
+                           画像なし
+                        </div>
+                      </div>
+                      <div className="absolute top-2 right-2 bg-white rounded-full p-0.5 shadow-sm">
+                        <CheckCircle2 className="text-green-500" size={16} />
+                      </div>
+                    </>
                   ) : <div className="text-4xl">💠</div>}
                 </div>
-                <h3 className="font-black text-[11px] h-8 flex items-center">{spot.name}</h3>
-                <p className="text-[8px] text-slate-400 flex items-center gap-1"><MapPin size={8} /> {spot.location}</p>
+                <div className="p-3">
+                  <h3 className="font-black text-[11px] h-8 flex items-center">{spot.name}</h3>
+                  <p className="text-[8px] text-slate-400 flex items-center gap-1"><MapPin size={8} /> {spot.location}</p>
+                </div>
               </div>
             );
           })}
@@ -253,7 +287,7 @@ export default function App() {
       </main>
 
       {/* Navigation */}
-      <nav className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 flex justify-around rounded-t-3xl max-w-md mx-auto">
+      <nav className="fixed bottom-0 left-0 right-0 bg-white shadow-lg p-4 flex justify-around rounded-t-3xl max-w-md mx-auto z-30">
         <div className="flex flex-col items-center text-sky-500"><QrCode size={24} /><span className="text-[9px] font-bold">SCAN</span></div>
         <div className="flex flex-col items-center text-slate-300"><MapPin size={24} /><span className="text-[9px] font-bold">MAP</span></div>
         <div className="flex flex-col items-center text-slate-300"><Award size={24} /><span className="text-[9px] font-bold">INFO</span></div>
