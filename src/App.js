@@ -187,8 +187,10 @@ export default function App() {
         {/* Success Reveal */}
         {lastCollectedSpot && (
           <div className="bg-white rounded-[2.5rem] p-6 shadow-2xl border-4 border-sky-400">
-            <div className="aspect-video bg-slate-100 rounded-2xl flex items-center justify-center mb-4">
-               <div className="font-bold text-slate-400 italic"></div>
+            <div className="aspect-video bg-slate-100 rounded-2xl flex items-center justify-center mb-4 text-center p-4">
+               <div className="font-bold text-slate-500 text-sm">
+                 
+               </div>
             </div>
             <h3 className="text-xl font-black text-center mb-4">{lastCollectedSpot.name}</h3>
             <button onClick={() => setLastCollectedSpot(null)} className="w-full bg-slate-800 text-white py-3 rounded-xl font-bold">
@@ -232,11 +234,13 @@ export default function App() {
             const isOwned = collectedStamps.includes(spot.id);
             return (
               <div key={spot.id} className={`rounded-3xl border p-4 transition-all ${isOwned ? 'bg-white border-sky-400' : 'bg-white/40 border-slate-100 opacity-50'}`}>
-                <div className="aspect-square flex items-center justify-center mb-2">
+                <div className="aspect-square flex items-center justify-center mb-2 overflow-hidden rounded-xl bg-slate-50">
                   {isOwned ? (
-                    <div className="text-center">
-                       <CheckCircle2 className="text-green-500 mx-auto mb-1" size={24} />
-                       <div className="text-[10px] font-bold text-slate-400"></div>
+                    <div className="text-center p-2">
+                       <CheckCircle2 className="text-green-500 mx-auto mb-1" size={20} />
+                       <div className="text-[9px] font-bold text-slate-400 leading-tight">
+                         
+                       </div>
                     </div>
                   ) : <div className="text-4xl">💠</div>}
                 </div>
